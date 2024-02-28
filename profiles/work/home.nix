@@ -1,5 +1,7 @@
 { config, pkgs, systemSettings, userSettings, ... }:
-
+let
+  nvchad = pkgs.callPackage ../../user/app/terminal/nvim/nvchad.nix {};
+in
 {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -15,6 +17,7 @@
     ../../user/shell/sh.nix # shell configurations (zsh, bash)
     ../../user/app/terminal/kitty/kitty.nix
     # ../../user/app/terminal/alacritty/alacritty.nix # TODO
+    # ../../user/app/terminal/nvim/nvchad.nix    
     ../../user/app/git/git.nix
     # ../../user/app/flatpak/flatpak.nix
     # (./. + "../../../user/app/browser" + ("/" + userSettings.browser) + ".nix") # Default browser selected from flake
@@ -64,6 +67,9 @@
     texinfo
     fzf
 
+    # Needed by NvChad 
+    libgcc
+    zig
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
@@ -119,4 +125,8 @@
   };
   xdg.mime.enable = true;
   xdg.mimeApps.enable = true;
+  xdg.configFile.nvim = {
+    source = nvchad;
+    recursive = true;
+  };
 }

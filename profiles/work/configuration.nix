@@ -92,6 +92,7 @@
     git
     cryptsetup # used for disk encryption
     home-manager
+    alacritty
   ];
 
   # Default shell
