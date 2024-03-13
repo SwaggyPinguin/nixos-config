@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, userSettings, ... }:
 {
   programs.kitty = {
     enable = true;
     font = {
-      name = "JetBrainsMono Nerd Font";
+      name = userSettings.font;
       size = 11;
     };
     # See all available kitty themes at: https://github.com/kovidgoyal/kitty-themes/blob/master/themes.json
