@@ -32,11 +32,11 @@
 
     # Garbage collect
     settings.auto-optimise-store = true;
-      gc = {
-      	automatic = true;
-	dates = "weekly";
-	options = "--delete-older-than 7d";
-      };
+		gc = {
+			automatic = true;
+			dates = "weekly";
+			options = "--delete-older-than 7d";
+		};
   };
 
   nixpkgs.config.allowUnfree = true;
@@ -90,6 +90,9 @@
     wget
     zsh
     git
+		fzf
+		gnugrep
+		ripgrep
     cryptsetup # used for disk encryption
     home-manager
     alacritty
@@ -126,10 +129,10 @@
 
   # Configure keymap in X11
   services.xserver = {
-    xkb = {
-  	layout = "de";
-	variant = "";
-    };
+		xkb = {
+			layout = "de";
+			variant = "";
+		};
   };
 
   # Enable CUPS to print documents.
