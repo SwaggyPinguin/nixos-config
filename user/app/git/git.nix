@@ -11,7 +11,7 @@
     userEmail = userSettings.email;
     extraConfig = {
       core = {
-        editor = "vim";
+        editor = "nvim";
         fileMode = true;
       };
       credential = {
