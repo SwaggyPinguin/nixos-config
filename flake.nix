@@ -36,7 +36,7 @@
 			# wmType = if (wm == "hyperland") then "wayland" else "x11";
 			browser = "qutebrowser"; # Default browser; must selext one from ./user/app/browser/
 			term = "alacritty";
-			font = "JetBrains Mono Nerd Font";
+			font = "JetBrainsMono Nerd Font";
 			fontPkg = pkgs.jetbrains-mono;
 			editor = "nvim";
 		};
