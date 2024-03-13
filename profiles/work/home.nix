@@ -1,6 +1,13 @@
 { config, pkgs, systemSettings, userSettings, ... }:
 let
-  nvchad = pkgs.callPackage ../../user/app/terminal/nvim/nvchad.nix {};
+  # nvchad = pkgs.callPackage ../../user/app/terminal/nvim/nvchad.nix {};
+  # nvimKickstart = pkgs.callPackage ../../user/app/terminal/nvim/nvim.nix {};
+  nvimKickstart = pkgs.fetchFromGitHub {
+    owner = "SwaggyPinguin";
+    repo = "kickstart-modular.nvim";
+    rev = "rev/heads/master";
+    sha256 = "2efQCfeuHW14eO5fRakQz73yMm0/quFz8meVvTuW7JY=";
+  };
 in
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -16,8 +23,8 @@ in
   imports = [
     ../../user/shell/sh.nix # shell configurations (zsh, bash)
     ../../user/app/terminal/kitty/kitty.nix
+    # ../../user/app/terminal/tmux/tmux.nix
     # ../../user/app/terminal/alacritty/alacritty.nix # TODO
-    # ../../user/app/terminal/nvim/nvchad.nix    
     ../../user/app/git/git.nix
     # ../../user/app/flatpak/flatpak.nix
     # (./. + "../../../user/app/browser" + ("/" + userSettings.browser) + ".nix") # Default browser selected from flake
@@ -31,7 +38,7 @@ in
     vscode
     google-chrome
     firefox
-    librewolf # Firefox Fork
+    # librewolf # Firefox Fork
     qutebrowser
     dmenu
     rofi
@@ -43,13 +50,16 @@ in
     gnome.nautilus
     gnome.gnome-calendar
     openvpn
-    texliveSmall
+    wireguard-tools
+    wg-netmanager
+    # texliveSmall
 
     # Media
-    gimp-with-plugins
-    pinta
+    gimp
+    # gimp-with-plugins
+    # pinta
     krita
-    inkscape
+    # inkscape
     vlc
     mpv
     obs-studio
@@ -60,14 +70,15 @@ in
     php
     yarn
     nodePackages_latest.nodejs
-    vimPlugins.nvchad
+    rustup
+    unzip
+    # vimPlugins.nvchad
 
     # Other
     plocate
     texinfo
-    fzf
+    findutils
 
-    # Needed by NvChad 
     libgcc
     zig
 
@@ -125,8 +136,14 @@ in
   };
   xdg.mime.enable = true;
   xdg.mimeApps.enable = true;
+
+  # xdg.configFile.nvim = {
+  #   source = nvchad;
+  #   recursive = true;
+  # };
+
   xdg.configFile.nvim = {
-    source = nvchad;
+    source = nvimKickstart;
     recursive = true;
   };
 }
