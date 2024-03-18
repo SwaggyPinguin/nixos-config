@@ -20,7 +20,7 @@ in
     enable = true;
     enableCompletion = true;
     shellAliases = myAliases;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     # initExtra = "source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
 
