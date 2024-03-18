@@ -17,6 +17,7 @@
       credential = {
         helper = "cache --timeout=86400";
       };
+      safe.directory = "/home/" + userSettings.username + "/.dotfiles";
     };
   };
 
