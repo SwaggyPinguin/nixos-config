@@ -1,5 +1,10 @@
-{ pkgs, lib, userSettings, storageDriver ? null, ... }:
-
+{
+  pkgs,
+  lib,
+  userSettings,
+  storageDriver ? null,
+  ...
+}:
 assert lib.asserts.assertOneOf "storageDriver" storageDriver [
   null
   "aufs"
@@ -8,9 +13,7 @@ assert lib.asserts.assertOneOf "storageDriver" storageDriver [
   "overlay"
   "overlay2"
   "zfs"
-];
-
-{
+]; {
   virtualisation.docker = {
     enable = true;
     enableOnBoot = true;
@@ -23,7 +26,7 @@ assert lib.asserts.assertOneOf "storageDriver" storageDriver [
     };
   };
 
-  users.users.${userSettings.username}.extraGroups = [ "docker" ];
+  users.users.${userSettings.username}.extraGroups = ["docker"];
 
   environment.systemPackages = with pkgs; [
     docker

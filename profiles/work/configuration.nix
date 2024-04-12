@@ -1,14 +1,17 @@
-{ pkgs, lib, systemSettings, userSettings, ... }:
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ../../system/hardware-configuration.nix
-      # (import ../../system/app/docker/docker.nix { storageDriver = "btrfs"; inherit userSettings pkgs lib; })
-      # ( import ../../system/security/sshd.nix { inherit userSettings; })
-    ];
+  pkgs,
+  lib,
+  systemSettings,
+  userSettings,
+  hyprland,
+  ...
+}: {
+  imports = [
+    ../../system/hardware-configuration.nix
+  ];
 
   # System
-  system =  {
+  system = {
     stateVersion = systemSettings.stateVersion;
     autoUpgrade = {
       enable = true;
@@ -20,16 +23,13 @@
     # Fix nix path
     nixPath = [
       "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
-      "nixos-config=$HOME/dotfiles/system/configuration.nix"
+      "nixos-config=$HOME/dotfiles/profiles/work/configuration.nix"
       "/nix/var/nix/profiles/per-user/root/channels"
     ];
 
     # Ensure nix flakes are enabled
     package = pkgs.nixFlakes;
-    settings.experimental-features = [ "nix-command" "flakes" ];
-    # extraOptions = ''
-    # 	experimental-features = nix-xommand flakes
-    # ''
+    settings.experimental-features = ["nix-command" "flakes"];
 
     # Garbage collect
     settings.auto-optimise-store = true;
@@ -43,7 +43,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # Kernal modules
-  boot.kernelModules = [ "i2c-dev" "i2c-piix4" "cpufreq_powersave" ];
+  boot.kernelModules = ["i2c-dev" "i2c-piix4" "cpufreq_powersave"];
 
   # Bootloader.
   boot.loader.grub.enable = true;
@@ -79,7 +79,7 @@
   users.users.${userSettings.username} = {
     isNormalUser = true;
     description = userSettings.name;
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     packages = [];
     uid = 1000;
   };
@@ -97,15 +97,16 @@
     cryptsetup # used for disk encryption
     home-manager
     alacritty
+    herbstluftwm
   ];
 
   # Default shell
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [zsh];
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true; # zsh is configured in ../../user/shell/zsh.nix
 
   fonts = {
-    packages = with pkgs; [ (nerdfonts.override { fonts = [ "JetBrainsMono" ]; }) ];
+    packages = with pkgs; [(nerdfonts.override {fonts = ["JetBrainsMono"];})];
     fontDir.enable = true;
   };
 
@@ -121,23 +122,44 @@
   # Configure console keymap
   console.keyMap = "de";
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
   services.xserver = {
+    enable = true;
     xkb = {
       layout = "de";
       variant = "";
     };
+    displayManager = {
+      # defaultSession = "none+herbstluftwm";
+      gdm = {
+        enable = true;
+        wayland = true;
+      };
+    };
+    desktopManager = {
+      gnome = {
+        enable = true;
+      };
+    };
+    windowManager = {
+      herbstluftwm = {
+        enable = true;
+      };
+    };
+  };
+
+  programs.hyprland = {
+    enable = true;
+    package = hyprland.packages.${pkgs.system}.hyprland;
+    xwayland.enable = true;
   };
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing = {
+    enable = true;
+    drivers = with pkgs; [epson-escpr];
+    browsing = true;
+    defaultShared = true;
+  };
 
   # Enable sound with pipewire.
   sound.enable = true;

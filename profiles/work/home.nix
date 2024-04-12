@@ -1,5 +1,11 @@
-{ config, pkgs, systemSettings, userSettings, ... }:
-let
+{
+  config,
+  pkgs,
+  systemSettings,
+  userSettings,
+  hyprland,
+  ...
+}: let
   # nvchad = pkgs.callPackage ../../user/app/terminal/nvim/nvchad.nix {};
   # nvimKickstart = pkgs.callPackage ../../user/app/terminal/nvim/nvim.nix {};
   nvimKickstart = pkgs.fetchFromGitHub {
@@ -8,8 +14,7 @@ let
     rev = "rev/heads/master";
     sha256 = "2efQCfeuHW14eO5fRakQz73yMm0/quFz8meVvTuW7JY=";
   };
-in
-{
+in {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = userSettings.username;
@@ -21,6 +26,9 @@ in
   programs.home-manager.enable = true;
 
   imports = [
+    hyprland.homeManagerModules.default
+    ../../user/wm/hyprland
+    ../../user/wm/herbstluftwm
     ../../user/shell/sh.nix # shell configurations (zsh, bash)
     ../../user/app/terminal/kitty/kitty.nix
     # ../../user/app/terminal/tmux/tmux.nix
@@ -113,7 +121,7 @@ in
 
   home.sessionVariables = {
     EDITOR = userSettings.editor;
-    TERM =  userSettings.term;
+    TERM = userSettings.term;
     BROWSER = userSettings.browser;
   };
 

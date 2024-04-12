@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{pkgs, ...}:
 # let
 #   # installation of plugins not in nixpkgs
 #   tmux-super-fingers = pkgs.tmuxPlugins.mkTmuxPlugin {
@@ -32,27 +32,27 @@
       tmuxPlugins.better-mouse-mode
 
       {
-	plugin = tmuxPlugins.resurrect;
-	extraConfig = ''
-	  set -g @resurrect-strategy-vim "session"
-	  set -g @resurrect-strategy-nvim "session"
-	  set -g @resurrect-capture-pane-contents 'on'
-	'';
+        plugin = tmuxPlugins.resurrect;
+        extraConfig = ''
+          set -g @resurrect-strategy-vim "session"
+          set -g @resurrect-strategy-nvim "session"
+          set -g @resurrect-capture-pane-contents 'on'
+        '';
       }
       {
-	plugin = tmuxPlugins.continuum;
-	extraConfig = ''
-	  set -g @continuum-restore 'on'
-	  set -g @continuum-save-interval '10'
-	  set -g @continuum-boot 'on'
-	'';
+        plugin = tmuxPlugins.continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '10'
+          set -g @continuum-boot 'on'
+        '';
       }
 
       # installation of plugins not in nixpkgs
- #      {
-	# plugin = tmux-super-fingers;
-	# extraConfig = "set -g @super-fingers-key f";
- #      }
+      #      {
+      # plugin = tmux-super-fingers;
+      # extraConfig = "set -g @super-fingers-key f";
+      #      }
     ];
 
     extraConfig = ''

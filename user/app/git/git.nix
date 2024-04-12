@@ -1,10 +1,14 @@
-{ config, pkgs, userSettings, ... }:
 {
-  home.packages = with pkgs; [ 
+  config,
+  pkgs,
+  userSettings,
+  ...
+}: {
+  home.packages = with pkgs; [
     git
     git-crypt
   ];
-  
+
   programs.git = {
     enable = true;
     userName = userSettings.name;
