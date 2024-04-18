@@ -1,10 +1,14 @@
-{ config, pkgs, userSettings, ... }:
 {
-  home.packages = with pkgs; [ 
+  config,
+  pkgs,
+  userSettings,
+  ...
+}: {
+  home.packages = with pkgs; [
     git
     git-crypt
   ];
-  
+
   programs.git = {
     enable = true;
     userName = userSettings.name;
@@ -17,7 +21,7 @@
       credential = {
         helper = "cache --timeout=86400";
       };
-      safe.directory = "/home/" + userSettings.username + "/.dotfiles";
+      safe.directory = userSettings.dotfilesDir;
     };
   };
 

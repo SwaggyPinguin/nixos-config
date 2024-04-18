@@ -1,15 +1,17 @@
-{ config, pkgs, systemSettings, userSettings, ... }:
-let
-  # nvchad = pkgs.callPackage ../../user/app/terminal/nvim/nvchad.nix {};
-  # nvimKickstart = pkgs.callPackage ../../user/app/terminal/nvim/nvim.nix {};
-  nvimKickstart = pkgs.fetchFromGitHub {
-    owner = "SwaggyPinguin";
-    repo = "kickstart-modular.nvim";
-    rev = "rev/heads/master";
-    sha256 = "2efQCfeuHW14eO5fRakQz73yMm0/quFz8meVvTuW7JY=";
-  };
-in
 {
+  config,
+  pkgs,
+  systemSettings,
+  userSettings,
+  ...
+}: let
+  # nvimKickstart = pkgs.fetchFromGitHub {
+  # owner = "SwaggyPinguin";
+  # repo = "kickstart-modular.nvim";
+  # rev = "rev/heads/master";
+  # sha256 = "2efQCfeuHW14eO5fRakQz73yMm0/quFz8meVvTuW7JY=";
+  # };
+in {
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = userSettings.username;
@@ -78,6 +80,7 @@ in
     plocate
     texinfo
     findutils
+    nh
 
     libgcc
     zig
@@ -113,7 +116,7 @@ in
 
   home.sessionVariables = {
     EDITOR = userSettings.editor;
-    TERM =  userSettings.term;
+    TERM = userSettings.term;
     BROWSER = userSettings.browser;
   };
 
@@ -130,7 +133,7 @@ in
     desktop = null;
     publicShare = null;
     extraConfig = {
-      XDG_DOTFILES_DIR = "${config.home.homeDirectory}/.dotfiles";
+      XDG_DOTFILES_DIR = userSettings.dotfilesDir;
       XDG_DEVELOPMENT_DIR = "${config.home.homeDirectory}/dev";
     };
   };
@@ -142,8 +145,8 @@ in
   #   recursive = true;
   # };
 
-  xdg.configFile.nvim = {
-    source = nvimKickstart;
-    recursive = true;
-  };
+  # xdg.configFile.nvim = {
+  # source = nvimKickstart;
+  # recursive = true;
+  # };
 }

@@ -1,14 +1,20 @@
-{ pkgs, lib, systemSettings, userSettings, ... }:
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ../../system/hardware-configuration.nix
-      # (import ../../system/app/docker/docker.nix { storageDriver = "btrfs"; inherit userSettings pkgs lib; })
-      # ( import ../../system/security/sshd.nix { inherit userSettings; })
-    ];
+  config,
+  pkgs,
+  lib,
+  systemSettings,
+  userSettings,
+  ...
+}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ../../system/hardware-configuration.nix
+    # (import ../../system/app/docker/docker.nix { storageDriver = "btrfs"; inherit userSettings pkgs lib; })
+    # ( import ../../system/security/sshd.nix { inherit userSettings; })
+  ];
 
   # System
-  system =  {
+  system = {
     stateVersion = systemSettings.stateVersion;
     autoUpgrade = {
       enable = true;
@@ -20,16 +26,13 @@
     # Fix nix path
     nixPath = [
       "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
-      "nixos-config=$HOME/dotfiles/system/configuration.nix"
+      "nixos-config=$HOME/.config/nix/profiles/work/configuration.nix"
       "/nix/var/nix/profiles/per-user/root/channels"
     ];
 
     # Ensure nix flakes are enabled
     package = pkgs.nixFlakes;
-    settings.experimental-features = [ "nix-command" "flakes" ];
-    # extraOptions = ''
-    # 	experimental-features = nix-xommand flakes
-    # ''
+    settings.experimental-features = ["nix-command" "flakes"];
 
     # Garbage collect
     settings.auto-optimise-store = true;
@@ -43,12 +46,21 @@
   nixpkgs.config.allowUnfree = true;
 
   # Kernal modules
-  boot.kernelModules = [ "i2c-dev" "i2c-piix4" "cpufreq_powersave" ];
+  boot.kernelModules = ["i2c-dev" "i2c-piix4" "cpufreq_powersave"];
 
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader = {
+    # systemd-boot.enable = true;
+    efi = {
+      canTouchEfiVariables = true;
+    };
+    grub = {
+      enable = true;
+      devices = ["nodev"];
+      # useOSProber = true;
+      efiSupport = true;
+    };
+  };
 
   # Networking
   networking.hostName = systemSettings.hostname; # Define your hostname.
@@ -62,7 +74,7 @@
   # Timezone and locale
   time.timeZone = systemSettings.timezone;
   # i18n.defaultLocale = "en_US.UTF-8";
-  i18n.defaultLocale = systemSettings.locale;
+  i18n.defaultLocale = systemSettings.defaultLocale;
   i18n.extraLocaleSettings = {
     LC_ADDRESS = systemSettings.locale;
     LC_IDENTIFICATION = systemSettings.locale;
@@ -79,7 +91,7 @@
   users.users.${userSettings.username} = {
     isNormalUser = true;
     description = userSettings.name;
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = ["networkmanager" "wheel"];
     packages = [];
     uid = 1000;
   };
@@ -100,21 +112,21 @@
   ];
 
   # Default shell
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [zsh];
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true; # zsh is configured in ../../user/shell/zsh.nix
 
   fonts = {
-    packages = with pkgs; [ (nerdfonts.override { fonts = [ "JetBrainsMono" ]; }) ];
+    packages = with pkgs; [(nerdfonts.override {fonts = ["JetBrainsMono"];})];
     fontDir.enable = true;
   };
 
-  #xdg.portal = {
+  # xdg.portal = {
   #  enable = true;
-  #  config.common.default = "*";
-  #  extraPortals = [
-  #    pkgs.xdg-desktop-portal
-  #    pkgs.xdg-desktop-portal-gtk
+  # config.common.default = "*";
+  #  extraPortals = with pkgs; [
+  #    xdg-desktop-portal
+  #    xdg-desktop-portal-gtk
   #  ];
   #};
 
@@ -134,6 +146,26 @@
       layout = "de";
       variant = "";
     };
+  };
+
+  # -- Nvidia Options --
+  # Enable OpenGL
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
+
+  services.xserver.videoDrivers = ["nvidia"];
+  hardware.nvidia = {
+    modesetting.enable = true;
+
+    # Enable the Nvidia settings menu,
+    # accessible via `nvidia-settings`.
+    nvidiaSettings = true;
+
+    # Optionally, you may need to select the appropriate driver version for your specific GPU.
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
   # Enable CUPS to print documents.

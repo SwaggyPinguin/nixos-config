@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   # ALIASES
   myAliases = {
     nv = "nvim";
@@ -10,8 +9,7 @@ let
     nixos-rebuild-flake = "sudo nixos-rebuild switch --flake ~/.dotfiles#system";
     home-manager-flake = "home-manager switch --flake ~/.dotfiles#user";
   };
-in
-{
+in {
   imports = [
     ./p10k.nix # add powerlevel10k to zsh plugins
   ];
@@ -29,10 +27,10 @@ in
       theme = "robbyrussell";
       # theme = "powerlevel10k";
       plugins = [
-	"git"
-	"aliases"
-	"docker"
-	"aliases"
+        "git"
+        "aliases"
+        "docker"
+        "aliases"
       ];
     };
   };
@@ -56,7 +54,8 @@ in
     btop
     neofetch
     onefetch
-    direnv nix-direnv
+    direnv
+    nix-direnv
   ];
 
   programs.direnv = {
