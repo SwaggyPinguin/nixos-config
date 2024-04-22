@@ -45,6 +45,8 @@ in {
     dmenu
     rofi
     git
+    _1password
+    _1password-gui
 
     # Office
     libreoffice-fresh
